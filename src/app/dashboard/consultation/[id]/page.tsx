@@ -26,6 +26,7 @@ export default function ConsultationPage() {
 
   const [callStatus, setCallStatus] = useState<"inactive" | "loading" | "active">("inactive")
   const [messages, setMessages] = useState<TranscriptMessage[]>([])
+  const [partialTranscript, setPartialTranscript] = useState<{ role: string, content: string } | null>(null)
   const [isGeneratingReport, setIsGeneratingReport] = useState(false)
   
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -64,8 +65,15 @@ export default function ConsultationPage() {
     }
 
     const handleMessage = (message: any) => {
-      if (message.type === "transcript" && message.transcriptType === "final") {
-        setMessages((prev) => [...prev, { role: message.role, content: message.transcript }])
+      if (message.type === "transcript") {
+        const mappedRole = (message.role === "assistant" || message.role === "bot") ? "assistant" : "user";
+        
+        if (message.transcriptType === "partial") {
+          setPartialTranscript({ role: mappedRole, content: message.transcript });
+        } else if (message.transcriptType === "final") {
+          setPartialTranscript(null);
+          setMessages((prev) => [...prev, { role: mappedRole as "user" | "assistant", content: message.transcript }]);
+        }
         // Scroll to bottom
         setTimeout(() => {
           if (scrollRef.current) {
@@ -166,6 +174,18 @@ export default function ConsultationPage() {
                     </div>
                   </div>
                 ))}
+                
+                {partialTranscript && (
+                  <div className={`flex gap-4 ${partialTranscript.role === "assistant" ? "flex-row" : "flex-row-reverse"} opacity-70 animate-pulse`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${partialTranscript.role === "assistant" ? "bg-primary text-white" : "bg-blue-600 text-white"}`}>
+                      {partialTranscript.role === "assistant" ? <ActivitySquare className="w-4 h-4" /> : <User className="w-4 h-4" />}
+                    </div>
+                    <div className={`p-4 rounded-2xl max-w-[80%] ${partialTranscript.role === "assistant" ? "bg-white/10 rounded-tl-sm" : "bg-blue-600/20 text-blue-100 rounded-tr-sm border border-blue-500/20"}`}>
+                      {partialTranscript.content}
+                      <span className="ml-1 opacity-50">...</span>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </ScrollArea>

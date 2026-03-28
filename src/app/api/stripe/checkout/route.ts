@@ -7,7 +7,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: "2024-06-20",
 });
 
-export async function POST() {
+export async function POST(req: Request) {
   try {
     const { userId } = await auth();
 
@@ -22,7 +22,7 @@ export async function POST() {
       return new NextResponse("STRIPE_PRICE_ID missing in env", { status: 500 });
     }
 
-    const host = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const host = req.headers.get("origin") || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
     const stripeSession = await stripe.checkout.sessions.create({
       success_url: `${host}/dashboard?success=true`,

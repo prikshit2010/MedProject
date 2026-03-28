@@ -15,6 +15,7 @@ export async function POST(req: Request) {
     const { transcript, symptoms, doctorId, sessionId } = await req.json()
 
     if (!transcript || transcript.length === 0) {
+      console.error(`[REPORT_ERROR] Empty transcript received for session: ${sessionId}`);
       return new Response("No transcript provided", { status: 400 })
     }
 
@@ -54,18 +55,25 @@ export async function POST(req: Request) {
     }
 
     // Insert the session and report into Neon Database
-    await db.insert(sessionHistory).values({
-      id: sessionId, // This was passed from the client UUID
-      userId: userId,
-      doctorId: doctorId,
-      symptoms: symptoms,
-      generatedReport: reportJson
-    })
+    try {
+      await db.insert(sessionHistory).values({
+        id: sessionId, // This was passed from the client UUID
+        userId: userId,
+        doctorId: doctorId,
+        symptoms: symptoms,
+        generatedReport: reportJson
+      })
 
+    } catch (dbError) {
+      console.error("[REPORT_ERROR] Database insertion failed:", dbError)
+      return new Response(JSON.stringify({ error: "Failed to save generated report" }), { status: 500 })
+    }
+
+    console.log(`[REPORT_SUCCESS] Successfully generated and saved report for session: ${sessionId}`);
     return new Response(JSON.stringify({ success: true, report: reportJson }), { status: 200 })
 
   } catch (error) {
-    console.error("Error generating report:", error)
-    return new Response(JSON.stringify({ error: "Internal Server Error" }), { status: 500 })
+    console.error("[REPORT_ERROR] Fatal error generating report:", error)
+    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : "Internal Server Error" }), { status: 500 })
   }
 }
