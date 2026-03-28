@@ -6,6 +6,11 @@ export const users = pgTable("users", {
   name: text("name").notNull(),
   email: text("email").notNull(),
   credits: integer("credits").notNull().default(1),
+  age: integer("age"),
+  weight: integer("weight"), // in kg
+  height: integer("height"), // in cm
+  address: text("address"),
+  contactNo: text("contact_no"),
 });
 
 export const sessionHistory = pgTable("session_history", {

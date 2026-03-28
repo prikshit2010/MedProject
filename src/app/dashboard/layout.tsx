@@ -2,8 +2,19 @@ import { UserButton } from "@clerk/nextjs"
 import { LayoutDashboard, Settings, CreditCard, ActivitySquare } from "lucide-react"
 import Link from "next/link"
 import { ReactNode } from "react"
+import { currentUser } from "@clerk/nextjs/server"
+import { db } from "@/db"
+import { users } from "@/db/schema"
 
-export default function DashboardLayout({ children }: { children: ReactNode }) {
+export default async function DashboardLayout({ children }: { children: ReactNode }) {
+  const user = await currentUser()
+  if (user) {
+    await db.insert(users).values({
+      id: user.id,
+      name: `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Patient',
+      email: user.emailAddresses[0]?.emailAddress || ''
+    }).onConflictDoNothing()
+  }
   return (
     <div className="flex min-h-screen bg-background text-foreground">
       {/* Sidebar */}
@@ -24,7 +35,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <CreditCard className="w-5 h-5 text-purple-400" />
             Billing & Plans
           </Link>
-          <Link href="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:bg-white/5 hover:text-foreground transition-all">
+          <Link href="/dashboard/settings" className="flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:bg-white/5 hover:text-foreground transition-all">
             <Settings className="w-5 h-5 text-gray-400" />
             Settings
           </Link>

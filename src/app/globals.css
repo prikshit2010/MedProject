@@ -48,35 +48,35 @@
 }
 
 :root {
-  /* Using a dark modern tech aesthetic by default */
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.985 0 0);
+  /* Bright, airy, pastel healthcare aesthetic */
+  --background: oklch(0.985 0.01 240); /* Very soft ice blue/white */
+  --foreground: oklch(0.2 0.02 240); /* Deep slate for readability */
   
-  --card: oklch(0.141 0.005 285.823 / 0.5); /* Semi-transparent for glass effect */
-  --card-foreground: oklch(0.985 0 0);
+  --card: oklch(1 0 0 / 0.85); /* Frosty white glass */
+  --card-foreground: oklch(0.2 0.02 240);
   
-  --popover: oklch(0.141 0.005 285.823);
-  --popover-foreground: oklch(0.985 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2 0.02 240);
   
-  /* Primary color: Vivid Neon Blue */
-  --primary: oklch(0.6 0.25 250);
-  --primary-foreground: oklch(0.985 0 0);
+  /* Primary color: Soft Pastel Indigo/Purple */
+  --primary: oklch(0.7 0.1 260);
+  --primary-foreground: oklch(0.98 0 0);
   
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.95 0.02 240);
+  --secondary-foreground: oklch(0.3 0.05 240);
   
-  --muted: oklch(0.269 0 0 / 0.5);
-  --muted-foreground: oklch(0.708 0 0);
+  --muted: oklch(0.95 0.02 240);
+  --muted-foreground: oklch(0.5 0.05 240);
   
-  --accent: oklch(0.6 0.25 250 / 0.1);
-  --accent-foreground: oklch(0.6 0.25 250);
+  --accent: oklch(0.9 0.05 260);
+  --accent-foreground: oklch(0.4 0.1 260);
   
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --destructive: oklch(0.6 0.15 20);
+  --destructive-foreground: oklch(0.98 0 0);
   
-  --border: oklch(0.269 0 0 / 0.5);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.6 0.25 250);
+  --border: oklch(0.9 0.01 240);
+  --input: oklch(0.95 0.01 240);
+  --ring: oklch(0.7 0.1 260);
   
   --radius: 1rem;
 }
@@ -87,13 +87,13 @@
   }
   body {
     @apply bg-background text-foreground;
-    background-image: radial-gradient(circle at 50% 0%, rgba(121, 40, 202, 0.15) 0%, transparent 50%),
-                      radial-gradient(circle at 0% 50%, rgba(0, 112, 243, 0.1) 0%, transparent 50%);
+    background-image: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                      radial-gradient(circle at 0% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
     background-attachment: fixed;
   }
 
-  /* Glassmorphism utility */
+  /* Glassmorphism utility updated for bright mode */
   .glass {
-    @apply bg-card/60 backdrop-blur-xl border border-white/10 shadow-xl;
+    @apply bg-card backdrop-blur-xl border border-white/40 shadow-[0_8px_30px_rgb(0,0,0,0.04)];
   }
 }
