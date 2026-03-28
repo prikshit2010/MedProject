@@ -2,7 +2,7 @@ import { ClerkProvider } from '@clerk/nextjs'
 import './globals.css'
 import { Inter } from 'next/font/google'
 import { ReactNode } from 'react'
-import { dark } from '@clerk/themes'
+import { ThemeProvider } from '@/components/ThemeProvider'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
@@ -15,16 +15,21 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <ClerkProvider
       appearance={{
-        baseTheme: dark,
         variables: {
-          colorPrimary: 'hsl(250, 60%, 50%)',
-          colorBackground: '#1a1a24',
+          colorPrimary: 'oklch(0.7 0.1 260)',
         }
       }}
     >
-      <html lang="en" className={`${inter.variable} dark`}>
+      <html lang="en" className={inter.variable} suppressHydrationWarning>
         <body className="antialiased font-sans text-foreground bg-background min-h-screen">
-          {children}
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

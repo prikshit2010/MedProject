@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
+import ThemeToggle from "@/components/dashboard/ThemeToggle"
 
 export default async function SettingsPage() {
   const { userId } = await auth();
@@ -18,9 +19,11 @@ export default async function SettingsPage() {
   return (
     <div className="p-8 max-w-3xl mx-auto space-y-8">
       <div>
-        <h1 className="text-4xl font-extrabold tracking-tight mb-2">My Profile</h1>
-        <p className="text-muted-foreground text-lg">Update your physical metrics for accurate health calculations.</p>
+        <h1 className="text-4xl font-extrabold tracking-tight mb-2">My Settings</h1>
+        <p className="text-muted-foreground text-lg">Update your physical metrics and interface preferences.</p>
       </div>
+
+      <ThemeToggle />
 
       <form action={updateUserProfile}>
         <Card className="glass shadow-sm">
